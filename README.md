@@ -25,4 +25,4 @@ These tests are crucial for our understanding before further PR to Quorum and/or
   - **Finding #1**: Sending tx size of 38KB to Node 1 results in undisturbed mining on all 3 nodes
   - **Finding #2**: Sending tx size of >40KB to Node 1 results in Oversided Data Error
 - Setting `--txsizelimit` for nodes 1,2,3 = [40,40,32]:
-  - **Finding #3**: If Node 1 and 2 instantiated first and mine a few transactions, followed by Node 3 joining: node 3 forms a side fork
+  - **Finding #3**: Node 1 and 2 instantiated first and allowed to mine a few transactions <40KB. Then node 3 joins. When 35KB transaction is sent to node 1, then the result is that node 3 forms a side fork.
