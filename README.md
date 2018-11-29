@@ -7,7 +7,7 @@ These tests are crucial for our understanding before further PR to Quorum and/or
 - Clone our Quorum with the PR: https://github.com/kaleido-io/quorum/tree/photic-tx-size-limit
 - `make all` in the Quorum dir
 - Add bootnode and geth binaries to your path:
-  - Ex: ln -s `<your_path_to>quorum/build/bin/{geth | bootnode}` to `/usr/bin/{geth|bootnode}`
+  - Ex: ln -s `<your_path_to>quorum/build/bin/{geth|bootnode}` to `/usr/bin/{geth|bootnode}`
 
 ## Running the test environment
 - Instantiate bootnode: `bootnode -nodekey boot.key -verbosity -9 -addr :30310`
