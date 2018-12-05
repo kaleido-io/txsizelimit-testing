@@ -1,11 +1,40 @@
-# txSizeLimitTesting
-Testing the network effects of the transaction size limit flag we've submitted to Quorum: https://github.com/jpmorganchase/quorum/pull/575
+# txsizelimit-testing
+Here we test the network effects of the transaction size limit flag submitted to Quorum: https://github.com/jpmorganchase/quorum/pull/575
 
-These tests are crucial for our understanding before further PR to Quorum and/or geth main.
+## Motivation for PR
+
+Our PR inserts a transaction size limit flag (`--txsizelimit`) as part of the geth cli. This allows the user to set the maximum size in KB that a node can process, validate, mine, and broadcast. We believe this is necessary for many enterprise blockchain clients in various scenarios, such as multi-party signatures. These tests allow us to see how nodes of different `txsizelimit`s interact before making the change live.
+
+## Test Details
+
+Here we present a test scenario where we have 3 nodes, with `txsizelimit`=[40,32,32]. A transaction of size 39KB is sent to node 1 (limit=40), and with the additional logging statements we observe how each node processes the transaction.
+
+## Primary findings
+In our test scenario, we uncover that mixed transaction size limits across the blockchain network does result in non-determinism and corrupt the blockchain.  
+
+When a 39KB transaction is broadcast to our test network, 2 important things happen:
+
+1. Nodes with the lower limit (32kb) *do reject* the 39kb transaction within their individual transaction pools, throwing `oversized data`. The node with higher limit (40kb) accepts it as expected.
+2. However when it comes to importing the new chain segment, the nodes with the lower limit import the new chain segment containing the 39KB transaction *without a problem*. 
+
+So while the mixed transction causes incongruities during pool-level validation, the block-level validation is not halted. 
+
+Rather, the transaction gets mined when node1 mines the next block and the transaction is eventually accepted into the network (regardless of the pool-level rejection by node2 and node3). 
+
+By tracing `blockchain.go`'s `insertChain()` logic, we can verify this to be true  by comparing the timestamps between the screenshots:
+
+
+
+-`16:16:26` - node 1 tx pool accepts, node 2&3 tx pool rejects
+- `16:16:30` - new chain segment containing the transaction recognized by all nodes
+
+
+# Running the tests:
 
 ## Setup binaries
-- Clone our Quorum with the PR: https://github.com/kaleido-io/quorum/tree/photic-tx-size-limit
-- `make all` in the Quorum dir
+- `cd quorum/ && make all`. This quorum directory contains the txsizelimit cli flag in the PR, in addition to logging statements to help describe the logic when nodes of different `txsizelimit` interact with each other. The logging statements are primarily in `tx_pool.go` and `blockchain.go`. 
+
+
 - Add bootnode and geth binaries to your path:
   - Ex: ln -s `<your_path_to>quorum/build/bin/{geth|bootnode}` to `/usr/bin/{geth|bootnode}`
 
