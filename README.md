@@ -30,7 +30,7 @@ Node 1:
 
 Node 2:
 
-![node_2](https://i.ibb.co/2WcDYy4/node-2.png)
+![node_2](https://i.ibb.co/bQNSRP9/node-2.png)
 
 Node 3:
 ![node_3](https://i.ibb.co/HgmKVhk/node-3.png)
