@@ -63,9 +63,3 @@ As a result of the test, we believe that adding a transaction size limit does no
   - edit the `ipcPath` variable to point to your path's `node1/geth.ipc`
   - `go run sendTx.go -txsizelimit=<limit for testing>`
 
-## Findings
-- Setting `--txsizelimit` for nodes 1,2,3 = [40,32,32]:
-  - **Finding #1**: Sending tx size of 35KB to Node 1 results in undisturbed mining on all 3 nodes
-  - **Finding #2**: Sending tx size of >40KB to Node 1 results in Oversided Data Error
-- Setting `--txsizelimit` for nodes 1,2,3 = [40,40,32]:
-  - **Finding #3**: Node 1 and 2 instantiated first and allowed to mine a few 35KB transactions. Then node 3 joins. When 35KB transaction is sent to node 1, then the result is that node 3 forms a side fork.
