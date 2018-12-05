@@ -21,11 +21,23 @@ So while the mixed transction causes incongruities during pool-level validation,
 
 Rather, the transaction gets mined when node1 mines the next block and the transaction is eventually accepted into the network (regardless of the pool-level rejection by node2 and node3). 
 
-By tracing `blockchain.go`'s `insertChain()` logic, we can verify this to be true  by comparing the timestamps between the screenshots:
+By placing logging statements in `blockchain.go`'s `insertChain()` logic, we can verify this to be true. 
 
+After the 39kb transaction is sent to node 1:
+
+Node 1:
 ![node 1](https://i.ibb.co/5TxpByW/node-1.png)
 
--`16:16:26` - node 1 tx pool accepts, node 2&3 tx pool rejects
+Node 2:
+
+![node_2](https://i.ibb.co/2WcDYy4/node-2.png)
+
+Node 3:
+![node_3](https://i.ibb.co/HgmKVhk/node-3.png)
+
+Comparing the timestamps between screenshots, we see that at:
+
+- `16:16:26` - node 1 tx pool accepts, node 2&3 tx pool rejects
 - `16:16:30` - new chain segment containing the transaction recognized by all nodes
 
 
