@@ -5,16 +5,17 @@ Here we test the network effects of the transaction size limit flag submitted to
 
 Our PR inserts a transaction size limit flag (`--txsizelimit`) as part of the geth cli. This allows the user to set the maximum size in KB that a node can process, validate, mine, and broadcast. We believe this is necessary for many enterprise blockchain clients in various scenarios, such as multi-party signatures. These tests allow us to see how nodes of different `txsizelimit`s interact before making the change live.
 
-## Test Details
+## Primary findings
+In our test scenario, we uncover that mixed transaction size limits across the blockchain network does not result in non-determinism or corrupt the blockchain. 
 
+If a transaction's size is less than the limit of node 1 but greater than that of node 2 and 3, the transaction **does not halt** the mining process but is eventually included in the chain. This is because the block mined by node 1 contains the transaction, which is properly recognized by nodes 2 and 3.
+
+## Test Details
 Here we present a test scenario where we have 3 nodes, with `txsizelimit`=[40,32,32]. A transaction of size 39KB is sent to node 1 (limit=40), and with the additional logging statements we observe how each node processes the transaction.
 
-## Primary findings
-In our test scenario, we uncover that **mixed transaction size limits** across the blockchain network **does not** result in non-determinism or corrupt the blockchain.  
+When a 39kb transaction is broadcast to our test network, 2 important things happen:
 
-We see that when 39KB transaction is broadcast to our test network, 2 important things happen:
-
-1. Nodes with the lower limit (32kb) **do reject** the 39kb transaction within their individual transaction pools, throwing `oversized data`. The node with higher limit (40kb) accepts it as expected
+1. Nodes with the lower limit (32kb) **reject** the 39kb transaction within their individual transaction pools, throwing `oversized data`. The node with higher limit (40kb) accepts it as expected
 2. However when it comes to importing the new chain segment, the nodes with the lower limit import the new chain segment containing the 39KB transaction **without a problem** 
 
 So while the mixed transction causes incongruities during pool-level validation, the block-level validation is not halted. 
