@@ -10,12 +10,12 @@ Our PR inserts a transaction size limit flag (`--txsizelimit`) as part of the ge
 Here we present a test scenario where we have 3 nodes, with `txsizelimit`=[40,32,32]. A transaction of size 39KB is sent to node 1 (limit=40), and with the additional logging statements we observe how each node processes the transaction.
 
 ## Primary findings
-In our test scenario, we uncover that mixed transaction size limits across the blockchain network does not result in non-determinism and corrupt the blockchain.  
+In our test scenario, we uncover that **mixed transaction size limits** across the blockchain network **does not** result in non-determinism or corrupt the blockchain.  
 
-When a 39KB transaction is broadcast to our test network, 2 important things happen:
+We see that when 39KB transaction is broadcast to our test network, 2 important things happen:
 
-1. Nodes with the lower limit (32kb) *do reject* the 39kb transaction within their individual transaction pools, throwing `oversized data`. The node with higher limit (40kb) accepts it as expected.
-2. However when it comes to importing the new chain segment, the nodes with the lower limit import the new chain segment containing the 39KB transaction *without a problem*. 
+1. Nodes with the lower limit (32kb) **do reject** the 39kb transaction within their individual transaction pools, throwing `oversized data`. The node with higher limit (40kb) accepts it as expected
+2. However when it comes to importing the new chain segment, the nodes with the lower limit import the new chain segment containing the 39KB transaction **without a problem** 
 
 So while the mixed transction causes incongruities during pool-level validation, the block-level validation is not halted. 
 
