@@ -37,8 +37,8 @@ Node 3:
 
 Comparing the timestamps between screenshots, we see that at:
 
-- `16:16:26` - node 1 tx pool accepts, node 2&3 tx pool rejects
-- `16:16:30` - new chain segment containing the transaction recognized by all nodes
+- `16:16:26` - node 1 tx pool accepts the 39kb transaction (hash=`0xb73295`), node 2&3 tx pool rejects it
+- `16:16:30` - new chain segment containing the transaction(hash=`0xb73295`) recognized by all nodes
 
 As a result of the test, we believe that adding a transaction size limit does not cause network affects beyond pool-level validation; it does not halt the block mining process or cause permanent forks, and is a safe addition to Quorum's cli.
 
