@@ -23,7 +23,7 @@ Rather, the transaction gets mined when node1 mines the next block and the trans
 
 By tracing `blockchain.go`'s `insertChain()` logic, we can verify this to be true  by comparing the timestamps between the screenshots:
 
-
+![node 1](https://i.ibb.co/5TxpByW/node-1.png)
 
 -`16:16:26` - node 1 tx pool accepts, node 2&3 tx pool rejects
 - `16:16:30` - new chain segment containing the transaction recognized by all nodes
