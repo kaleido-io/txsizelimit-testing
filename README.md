@@ -10,7 +10,7 @@ Our PR inserts a transaction size limit flag (`--txsizelimit`) as part of the ge
 Here we present a test scenario where we have 3 nodes, with `txsizelimit`=[40,32,32]. A transaction of size 39KB is sent to node 1 (limit=40), and with the additional logging statements we observe how each node processes the transaction.
 
 ## Primary findings
-In our test scenario, we uncover that mixed transaction size limits across the blockchain network does result in non-determinism and corrupt the blockchain.  
+In our test scenario, we uncover that mixed transaction size limits across the blockchain network does not result in non-determinism and corrupt the blockchain.  
 
 When a 39KB transaction is broadcast to our test network, 2 important things happen:
 
@@ -40,6 +40,7 @@ Comparing the timestamps between screenshots, we see that at:
 - `16:16:26` - node 1 tx pool accepts, node 2&3 tx pool rejects
 - `16:16:30` - new chain segment containing the transaction recognized by all nodes
 
+As a result of the test, we believe that adding a transaction size limit does not cause network affects beyond pool-level validation; it does not halt the block mining process or cause permanent forks, and is a safe addition to Quorum's cli.
 
 # Running the tests:
 
